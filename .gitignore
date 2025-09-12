@@ -11,7 +11,7 @@
 
 # Binary files
 bin/
-pkg/
+
 
 # Module dependencies
 go.mod
