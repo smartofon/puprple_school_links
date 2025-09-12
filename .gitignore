@@ -61,3 +61,5 @@ __pycache__/
 
 # OS X
 .Trash/
+
+/data_postgres
