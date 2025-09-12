@@ -1,0 +1,63 @@
+# Go
+*.exe
+*.test
+*.prof
+*.out
+*.tmp
+*.bak
+*.log
+*.swp
+*.swo
+
+# Binary files
+bin/
+pkg/
+
+# Module dependencies
+go.mod
+go.sum
+
+# Build output
+build/
+dist/
+output/
+
+# Test coverage
+coverage.out
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+*.code-workspace
+
+# IDE specific
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node.js (если используется)
+node_modules/
+
+# Docker
+.dockerignore
+
+# Temporary files
+temp/
+tmp/
+
+# Caching
+__pycache__/
+.cache/
+
+# OS X
+.Trash/

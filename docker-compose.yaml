@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16.4
+    container_name: postgres-go-links
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 111111
+      PG_DATA: /data/postgres
+    volumes:
+      - ./data_postgres:/data/postgres
+    ports:
+      - "5432:5432"
