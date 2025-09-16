@@ -2,7 +2,7 @@ package main
 
 import (
 	"links/configs"
-	"links/internal/models"
+	"links/internal/cart/models"
 	"links/pkg/db"
 )
 
