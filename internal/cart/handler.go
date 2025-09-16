@@ -48,6 +48,7 @@ func (handler *CartHandler) UpdateProduct() http.HandlerFunc {
 			ProductId:   r.ProductId,
 			Name:        r.Name,
 			Description: r.Description,
+			Images:      r.Images,
 			Price:       float64(r.Price),
 		})
 		if err != nil {

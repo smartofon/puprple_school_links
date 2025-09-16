@@ -33,7 +33,9 @@ func (repo *CartRepository) UpdateProduct(product *models.Product) (*models.Prod
 	tx := repo.Database.DB.Where("product_id=?", product.ProductId).First(&p)
 	if tx.Error == nil {
 		p.Name = product.Name
+		p.Description = product.Description
 		p.Price = product.Price
+		p.Images = product.Images
 		repo.Database.DB.Save(&p)
 		return &p, nil
 	}
