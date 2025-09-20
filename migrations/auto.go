@@ -3,6 +3,7 @@ package main
 import (
 	"links/configs"
 	"links/internal/cart/models"
+	"links/internal/user"
 	"links/pkg/db"
 )
 
@@ -15,4 +16,5 @@ func main() {
 
 	// автомиграция
 	db.DbConnector.AutoMigrate(&models.Product{})
+	db.DbConnector.AutoMigrate(&user.User{})
 }

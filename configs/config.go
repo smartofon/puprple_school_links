@@ -9,7 +9,8 @@ import (
 )
 
 type AppConfig struct {
-	DB db.DbConfig
+	DB     db.DbConfig
+	Secret string
 }
 
 // глобальный журнал натсроек приложения
@@ -28,4 +29,5 @@ func (conf *AppConfig) LoadConfig() {
 	}
 
 	conf.DB.Dsn = os.Getenv("DSN")
+	conf.Secret = os.Getenv("SECRET")
 }

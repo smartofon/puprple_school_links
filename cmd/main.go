@@ -3,8 +3,11 @@ package main
 import (
 	"fmt"
 	"links/configs"
+	"links/internal/auth"
 	"links/internal/cart"
+	"links/internal/user"
 	"links/pkg/db"
+	"links/pkg/jwt"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -21,9 +24,14 @@ func main() {
 	db.DbConnector.Init(configs.Config.DB)
 
 	repo := cart.NewCartRepository(db.DbConnector)
+	u := user.NewUserRepository(db.DbConnector)
+	j := jwt.NewJWT(configs.Config.Secret)
+	s := auth.NewAuthService(u, j)
 
 	handler := &cart.CartHandler{
 		CartRepository: repo,
+		UserRepository: u,
+		AuthHService:   s,
 	}
 
 	// Путь к директории для логов (можно заменить на нужный)
