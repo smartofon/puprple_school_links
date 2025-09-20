@@ -22,7 +22,7 @@ func NewCartHandler(router *http.ServeMux, handler *CartHandler) {
 	router.HandleFunc("DELETE /product/{uid}", handler.DeleteProduct())
 
 	router.HandleFunc("GET /auth/login", handler.LoginHandler())
-	router.HandleFunc("POST /auth/confirm", handler.Confirm())
+	router.HandleFunc("GET /auth/confirm", handler.Confirm())
 }
 
 func (handler *CartHandler) CreateProduct() http.HandlerFunc {
@@ -114,7 +114,6 @@ func (handler *CartHandler) LoginHandler() http.HandlerFunc {
 		if err != nil {
 			return
 		}
-
 		user, err := handler.AuthHService.Login(r.Phone)
 		if err != nil {
 			http.Error(writer, err.Error(), http.StatusBadRequest)

@@ -10,7 +10,7 @@ type PhoneAuthResponce struct {
 
 type PhoneAuthCodeRequest struct {
 	SessionId string `json:"session_id" validate:"required"`
-	Code      string `json:"code" validate:"required.numeric"`
+	Code      string `json:"code" validate:"required,numeric"`
 }
 
 type PhoneAuthCodeResponce struct {

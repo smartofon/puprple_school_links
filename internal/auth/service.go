@@ -23,7 +23,9 @@ func NewAuthService(rep *user.UserRepository, j *jwt.JWT) *AuthHService {
 func (service *AuthHService) Login(phone string) (*user.User, error) {
 	u, err := service.UserRepository.Find(phone)
 	if err != nil {
-		return nil, fmt.Errorf("Login error: %s", err.Error())
+		u = &user.User{
+			Phone: phone,
+		}
 	}
 	sessid, err := secure.GenerateSecureID(16)
 	if err != nil {
