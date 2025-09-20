@@ -26,7 +26,6 @@ func (service *AuthHService) Login(phone string) (*user.User, error) {
 		u = &user.User{
 			Phone: phone,
 		}
-		service.UserRepository.Database.DB.Save(&u)
 	}
 	sessid, err := secure.GenerateSecureID(16)
 	if err != nil {
