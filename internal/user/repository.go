@@ -19,7 +19,7 @@ func (repo *UserRepository) Find(phone string) (*User, error) {
 	user := User{}
 	tx := repo.Database.DB.First(&user, "phone=?", phone)
 	if tx.Error != nil {
-		return nil, errors.New("user is exists")
+		return nil, errors.New("user not exists")
 	}
 	return &user, nil
 }

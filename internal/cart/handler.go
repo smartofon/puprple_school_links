@@ -21,8 +21,8 @@ func NewCartHandler(router *http.ServeMux, handler *CartHandler) {
 	router.HandleFunc("PUT /product/{uid}", handler.UpdateProduct())
 	router.HandleFunc("DELETE /product/{uid}", handler.DeleteProduct())
 
-	router.HandleFunc("GET /auth/login", handler.LoginHandler())
-	router.HandleFunc("GET /auth/confirm", handler.Confirm())
+	router.HandleFunc("POST /auth/login", handler.LoginHandler())
+	router.HandleFunc("POST /auth/confirm", handler.Confirm())
 }
 
 func (handler *CartHandler) CreateProduct() http.HandlerFunc {
