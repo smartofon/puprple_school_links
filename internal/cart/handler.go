@@ -23,6 +23,7 @@ func NewCartHandler(router *http.ServeMux, handler *CartHandler) {
 
 	router.HandleFunc("POST /auth/login", handler.LoginHandler())
 	router.HandleFunc("POST /auth/confirm", handler.Confirm())
+	router.Handle("POST /auth/test", auth.IsAuthorized(handler.Test()))
 }
 
 func (handler *CartHandler) CreateProduct() http.HandlerFunc {
@@ -139,4 +140,18 @@ func (handler *CartHandler) Confirm() http.HandlerFunc {
 		answer := auth.PhoneAuthCodeResponce{Token: token}
 		api.Json(writer, answer, 200)
 	}
+}
+
+func (handler *CartHandler) Test() http.Handler {
+	return http.HandlerFunc(func(writer http.ResponseWriter, r *http.Request) {
+		phone := r.Context().Value("user_phone")
+		answer := struct {
+			Operation string
+			Phone     string
+		}{
+			Operation: "test",
+			Phone:     phone.(string),
+		}
+		api.Json(writer, answer, 200)
+	})
 }
