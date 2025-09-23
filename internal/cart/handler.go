@@ -27,7 +27,7 @@ func NewCartHandler(router *http.ServeMux, handler *CartHandler) {
 	router.Handle("POST /auth/test", auth.IsAuthorized(handler.UserRepository, handler.Test()))
 
 	router.Handle("POST /order", auth.IsAuthorized(handler.UserRepository, handler.CreateOrder()))
-	router.Handle("POST /order/{id}", auth.IsAuthorized(handler.UserRepository, handler.GetOrder()))
+	router.Handle("GET /order/{id}", auth.IsAuthorized(handler.UserRepository, handler.GetOrder()))
 	router.Handle("GET /my-orders", auth.IsAuthorized(handler.UserRepository, handler.OrderList()))
 }
 
