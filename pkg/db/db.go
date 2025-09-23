@@ -20,7 +20,9 @@ type DbConfig struct {
 var DbConnector *Db
 
 func (dbconnector *Db) Init(conf DbConfig) {
-	database, err := gorm.Open(postgres.Open(conf.Dsn), &gorm.Config{})
+	database, err := gorm.Open(postgres.Open(conf.Dsn), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	if err != nil {
 		panic(err)
 	}

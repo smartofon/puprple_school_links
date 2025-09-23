@@ -1,6 +1,7 @@
 package cart
 
 import (
+	"fmt"
 	"links/internal/auth"
 	"links/internal/cart/models"
 	"links/internal/user"
@@ -23,7 +24,11 @@ func NewCartHandler(router *http.ServeMux, handler *CartHandler) {
 
 	router.HandleFunc("POST /auth/login", handler.LoginHandler())
 	router.HandleFunc("POST /auth/confirm", handler.Confirm())
-	router.Handle("POST /auth/test", auth.IsAuthorized(handler.Test()))
+	router.Handle("POST /auth/test", auth.IsAuthorized(handler.UserRepository, handler.Test()))
+
+	router.Handle("POST /order", auth.IsAuthorized(handler.UserRepository, handler.CreateOrder()))
+	router.Handle("POST /order/{id}", auth.IsAuthorized(handler.UserRepository, handler.GetOrder()))
+	router.Handle("GET /my-orders", auth.IsAuthorized(handler.UserRepository, handler.OrderList()))
 }
 
 func (handler *CartHandler) CreateProduct() http.HandlerFunc {
@@ -144,14 +149,87 @@ func (handler *CartHandler) Confirm() http.HandlerFunc {
 
 func (handler *CartHandler) Test() http.Handler {
 	return http.HandlerFunc(func(writer http.ResponseWriter, r *http.Request) {
-		phone := r.Context().Value("user_phone")
 		answer := struct {
-			Operation string
-			Phone     string
+			Operation  string
+			Phone      string
+			Authorized any
+			ID         any
 		}{
-			Operation: "test",
-			Phone:     phone.(string),
+			Operation:  "test",
+			Phone:      r.Context().Value("user_phone").(string),
+			Authorized: r.Context().Value("authorized"),
+			ID:         r.Context().Value("user_id"),
 		}
 		api.Json(writer, answer, 200)
 	})
+}
+
+func (handler *CartHandler) CreateOrder() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		r, err := api.HandleBody[OrderCreateResponse](&writer, request)
+		if err != nil {
+			return
+		}
+		user := request.Context().Value("user_id").(int)
+		order, err := handler.CartRepository.CreateOrder(r.Products, user)
+		answer := AnswerTemplate{
+			Result:  "ok",
+			Message: "",
+		}
+		if err != nil {
+			answer.Result = "error"
+			answer.Message = err.Error()
+			api.Json(writer, answer, http.StatusInternalServerError)
+		}
+		answer.Message = fmt.Sprintf("Create order number #%v", order.ID)
+		api.Json(writer, answer, 200)
+	}
+}
+
+func (handler *CartHandler) GetOrder() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		s := request.PathValue("id")
+		orderID, err := strconv.Atoi(s)
+		user := request.Context().Value("user_id").(int)
+		if err != nil {
+			api.Json(writer, struct{}{}, http.StatusBadRequest)
+			return
+		}
+
+		answer := AnswerTemplate{
+			Result:  "ok",
+			Message: "",
+		}
+
+		order, err := handler.CartRepository.GetOrder(orderID, user)
+		if err != nil {
+			answer.Result = "error"
+			answer.Message = err.Error()
+			api.Json(writer, answer, http.StatusBadRequest)
+			return
+		}
+
+		api.Json(writer, order, 200)
+	}
+}
+
+func (handler *CartHandler) OrderList() http.HandlerFunc {
+	return func(writer http.ResponseWriter, request *http.Request) {
+		user := request.Context().Value("user_id").(int)
+
+		answer := AnswerTemplate{
+			Result:  "ok",
+			Message: "",
+		}
+
+		orders, err := handler.CartRepository.OrderList(user)
+		if err != nil {
+			answer.Result = "error"
+			answer.Message = err.Error()
+			api.Json(writer, answer, http.StatusBadRequest)
+			return
+		}
+
+		api.Json(writer, orders, 200)
+	}
 }
